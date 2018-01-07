@@ -24120,10 +24120,11 @@ function updateAnswers() {
 
     switch (action.type) {
         case 'SELECTED_ANSWER':
+
             var isAvailable = false;
             state.forEach(function (eachAnswer, index) {
                 if (eachAnswer.questionName === action.answer.questionName) {
-                    eachAnswer = action.answer;
+                    state[index] = action.answer;
                     isAvailable = true;
                 }
             });
