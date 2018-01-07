@@ -11,7 +11,7 @@ const OptionList = ( {name, options, onSelect} ) => {
                             type='radio' 
                             id={`${eachOption.name}`} 
                             value={eachOption.name}
-                            onChange={() => onSelect(eachOption) }
+                            onChange={() => onSelect(name, eachOption) }
                         />
                         <label htmlFor={eachOption.name}>{ eachOption.value }</label>
                     </li>

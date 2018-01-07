@@ -3,22 +3,32 @@ import { connect } from 'react-redux';
 import Question from '../common/question';
 import OptionList from '../common/optionList';
 import { bindActionCreators } from 'redux';
-import { getQuestions } from '../../actions/quizActions';
+import { getQuestions, updateAnswers } from '../../actions/quizActions';
 
 class QuestionList extends React.Component {
 
-    componentDidMount() {
-        //Dispatch an action
-        this.props.getQuestions();
+    constructor () {
+        super();
+        this.onSelect = this.onSelect.bind(this);
     }
 
-    onSelect( selectedOption ) {
-        debugger
+    componentDidMount() {
+        //Dispatch an action
+        this.props.actions.getQuestions();
+    }
+
+    onSelect( questionName, selectedOption ) {
+        const selectedItem = {
+            questionName,
+            selectedOption
+        };
+
+        this.props.actions.updateAnswers(selectedItem);
     }
 
     render () {
         const { questions } = this.props;
-debugger
+
         return (
             questions.map(( eachQuestion ) => {
                 return (
@@ -39,9 +49,15 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return bindActionCreators({ 
-        getQuestions: getQuestions
-    }, dispatch)
+    return {
+        actions: {
+            getQuestions: bindActionCreators(getQuestions, dispatch),
+            updateAnswers: bindActionCreators(updateAnswers, dispatch)
+        }
+    }
+    // bindActionCreators({
+    //     getQuestions: getQuestions
+    // }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionList);

@@ -1364,8 +1364,11 @@ var _redux = __webpack_require__(8);
 
 var _getQuestions = __webpack_require__(96);
 
+var _updateAnswers = __webpack_require__(128);
+
 var rootReducer = (0, _redux.combineReducers)({
-    questions: _getQuestions.getQuestions
+    questions: _getQuestions.getQuestions,
+    updateAnswers: _updateAnswers.updateAnswers
 });
 
 exports.default = rootReducer;
@@ -1381,6 +1384,7 @@ Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.getQuestions = getQuestions;
+exports.updateAnswers = updateAnswers;
 
 var _axios = __webpack_require__(108);
 
@@ -1395,6 +1399,14 @@ function getQuestions(questions) {
         request.then(function (response) {
             dispatch({ type: 'GET_QUESTIONS', payload: response.data.questions });
         });
+    };
+}
+
+function updateAnswers(answer) {
+    debugger;
+    return {
+        type: 'SELECTED_ANSWER',
+        answer: answer
     };
 }
 
@@ -19817,19 +19829,27 @@ var QuestionList = function (_React$Component) {
     function QuestionList() {
         _classCallCheck(this, QuestionList);
 
-        return _possibleConstructorReturn(this, (QuestionList.__proto__ || Object.getPrototypeOf(QuestionList)).apply(this, arguments));
+        var _this = _possibleConstructorReturn(this, (QuestionList.__proto__ || Object.getPrototypeOf(QuestionList)).call(this));
+
+        _this.onSelect = _this.onSelect.bind(_this);
+        return _this;
     }
 
     _createClass(QuestionList, [{
         key: 'componentDidMount',
         value: function componentDidMount() {
             //Dispatch an action
-            this.props.getQuestions();
+            this.props.actions.getQuestions();
         }
     }, {
         key: 'onSelect',
-        value: function onSelect(selectedOption) {
-            debugger;
+        value: function onSelect(questionName, selectedOption) {
+            var selectedItem = {
+                questionName: questionName,
+                selectedOption: selectedOption
+            };
+
+            this.props.actions.updateAnswers(selectedItem);
         }
     }, {
         key: 'render',
@@ -19838,7 +19858,7 @@ var QuestionList = function (_React$Component) {
 
             var questions = this.props.questions;
 
-            debugger;
+
             return questions.map(function (eachQuestion) {
                 return _react2.default.createElement(
                     'div',
@@ -19860,9 +19880,15 @@ function mapStateToProps(state) {
 }
 
 function mapDispatchToProps(dispatch) {
-    return (0, _redux.bindActionCreators)({
-        getQuestions: _quizActions.getQuestions
-    }, dispatch);
+    return {
+        actions: {
+            getQuestions: (0, _redux.bindActionCreators)(_quizActions.getQuestions, dispatch),
+            updateAnswers: (0, _redux.bindActionCreators)(_quizActions.updateAnswers, dispatch)
+        }
+        // bindActionCreators({
+        //     getQuestions: getQuestions
+        // }, dispatch)
+    };
 }
 
 exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(QuestionList);
@@ -22432,7 +22458,7 @@ var OptionList = function OptionList(_ref) {
                     id: '' + eachOption.name,
                     value: eachOption.name,
                     onChange: function onChange() {
-                        return onSelect(eachOption);
+                        return onSelect(name, eachOption);
                     }
                 }),
                 _react2.default.createElement(
@@ -24072,6 +24098,42 @@ module.exports = function spread(callback) {
   };
 };
 
+
+/***/ }),
+/* 127 */,
+/* 128 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.updateAnswers = updateAnswers;
+
+function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+function updateAnswers() {
+    var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+    var action = arguments[1];
+
+    switch (action.type) {
+        case 'SELECTED_ANSWER':
+            var isAvailable = false;
+            state.forEach(function (eachAnswer, index) {
+                if (eachAnswer.questionName === action.answer.questionName) {
+                    eachAnswer = action.answer;
+                    isAvailable = true;
+                }
+            });
+
+            return isAvailable ? state : [].concat(_toConsumableArray(state), [action.answer]);
+            break;
+    }
+
+    return state;
+}
 
 /***/ })
 /******/ ]);

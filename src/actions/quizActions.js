@@ -9,3 +9,11 @@ export function getQuestions(questions) {
         })
     }
 }
+
+export function updateAnswers(answer) {
+    debugger
+    return {
+        type: 'SELECTED_ANSWER',
+        answer: answer
+    }
+}
