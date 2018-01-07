@@ -1,0 +1,17 @@
+h1 {
+    color: #666;
+}
+.wrapper {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+}
+.question {
+    font-size: 25px;
+}
+.options li {
+    list-style-type: none;
+    text-align: left;
+    padding: 10px;
+    border: 1px solid #ccc;
+}

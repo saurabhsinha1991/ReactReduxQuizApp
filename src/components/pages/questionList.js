@@ -3,17 +3,18 @@ import { connect } from 'react-redux';
 import Question from '../common/question';
 import OptionList from '../common/optionList';
 import { bindActionCreators } from 'redux';
-import { getQuestions, updateAnswers } from '../../actions/quizActions';
+import { getQuestions, updateAnswers, validateAnswer } from '../../actions/quizActions';
 
 class QuestionList extends React.Component {
 
     constructor () {
         super();
         this.onSelect = this.onSelect.bind(this);
+        this.validateAnswer = this.validateAnswer.bind(this);
     }
 
     componentDidMount() {
-        //Dispatch an action
+        //Dispatch an action ndaksnbajd
         this.props.actions.getQuestions();
     }
 
@@ -26,25 +27,45 @@ class QuestionList extends React.Component {
         this.props.actions.updateAnswers(selectedItem);
     }
 
+    validateAnswer() {
+        this.props.actions.validateAnswer(this.props.answers);
+    }
+
     render () {
-        const { questions } = this.props;
+        const { questions, showResults } = this.props;
 
         return (
-            questions.map(( eachQuestion ) => {
-                return (
-                    <div key={eachQuestion.id}>
-                        <Question question={eachQuestion.question} />
-                        <OptionList name={eachQuestion.name} options={eachQuestion.options} onSelect={this.onSelect} />
+            <div className='wrapper'>
+                { showResults.results ?
+                    <div>
+                        <h1>Your score is: {showResults.score}</h1>
                     </div>
-                )
-            })
+                    :
+                    <div>
+                        <h1>Welcome to quiz</h1>
+                        <p>All answers are currently first option</p>
+                        {questions.map(( eachQuestion ) => {
+                            return (
+                                <div key={eachQuestion.id}>
+                                    <Question question={eachQuestion.question} />
+                                    <OptionList name={eachQuestion.name} options={eachQuestion.options} onSelect={this.onSelect} />
+                                </div>
+                            )
+                        })
+                        }
+                        <button type='button' onClick={this.validateAnswer}>Submit</button>
+                    </div>
+                }
+            </div>
         )
     }
 }
 
 function mapStateToProps(state) {
     return {
-        questions: state.questions.questions
+        questions: state.questions.questions,
+        answers: state.updateAnswers,
+        showResults: state.validateAnswers
     }
 }
 
@@ -52,12 +73,10 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: {
             getQuestions: bindActionCreators(getQuestions, dispatch),
-            updateAnswers: bindActionCreators(updateAnswers, dispatch)
+            updateAnswers: bindActionCreators(updateAnswers, dispatch),
+            validateAnswer: bindActionCreators(validateAnswer, dispatch)
         }
     }
-    // bindActionCreators({
-    //     getQuestions: getQuestions
-    // }, dispatch)
 }
 
 export default connect(mapStateToProps, mapDispatchToProps)(QuestionList);

@@ -2,7 +2,7 @@ import React from 'react';
 
 const OptionList = ( {name, options, onSelect} ) => {
     return (
-        <ul>
+        <ul className='options'>
             {
                 options.map( (eachOption, index) => (
                     <li key={index}>
