@@ -11,7 +11,7 @@ const webpackConfig = require( './webpack.config.js' );
 const router = express.Router();
 
 const compiler = webpack(webpackConfig);
-console.log(compiler);
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
